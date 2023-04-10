@@ -9,13 +9,15 @@ class coordinates_preprocesing(data_loader_opsvone):
         self.data=self.load_data(dates,time_slots)
         self.names=np.array(self.data.invoice_number)
         self.coordinates=np.array(self.data.location_coordinates)
-
     def clean_coordinates(self,s):
-        if len(s.split(' ')) != 4:
+        if len(re.split('\s+', s)) == 2:
+            temp=re.split('\s+', s)
+            return [float(temp[0]),float(temp[1])]
+        if len(re.split('\s+', s)) != 4:
             return [0, 0]
-        deg0, dec0 = s.split(' ')[1].split('°')
-        deg1, dec1 = s.split(' ')[-1].split('°')
 
+        deg0, dec0 = re.split('\s+', s)[1].split('°')
+        deg1, dec1 = re.split('\s+', s)[-1].split('°')
         deg0 = float(deg0)
         deg1 = float(deg1)
         minu0, seco0 = dec0.split("'")
@@ -33,7 +35,7 @@ class coordinates_preprocesing(data_loader_opsvone):
 class distance_matrix(coordinates_preprocesing):
     # The Structure is such that we can only input dates and time_slots once
     # Only when the class is distance_matrix class is constructed
-    def __init__(self,dates=['2023-02-01', '2023-02-02'],time_slots=['5:31 PM to 8:30 PM']):
+    def __init__(self,dates=['2023-02-01', '2023-02-02'],time_slots=['9:30 AM to 11:30 AM']):
         super().__init__(dates,time_slots)
     def euclidean_matrix_raw(self):
         xy=self.convert_to_xy()

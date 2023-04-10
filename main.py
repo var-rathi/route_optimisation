@@ -6,12 +6,8 @@
 # from ortools.constraint_solver import pywrapcp
 import os
 from distance_matrix import distance_matrix
-
-
 if __name__ == '__main__':
-
     calc_distance=distance_matrix()
     dis_mat=calc_distance.euclidean_matrix_raw()
-
     print(dis_mat)
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
