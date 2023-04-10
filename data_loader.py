@@ -45,7 +45,11 @@ class data_loader_opsvone:
         return df
     def load_data(self,dates,time_slots):
         self.connect_server()
-        sql_command='select {} from {} where is_coordinate=1 and CAST(updated_at AS DATE)  IN("{}") and time_slot IN("{}")'.format(self.data_columns(),self.table,'","'.join(dates),'","'.join(time_slots))
+        if len(time_slots)==0:
+            sql_command = 'select {} from {} where is_coordinate=1 and CAST(updated_at AS DATE)  IN("{}") '.format(
+                self.data_columns(), self.table, '","'.join(dates))
+        else:
+            sql_command='select {} from {} where is_coordinate=1 and CAST(updated_at AS DATE)  IN("{}") and time_slot IN("{}")'.format(self.data_columns(),self.table,'","'.join(dates),'","'.join(time_slots))
         print(sql_command)
         self.cursor.execute(sql_command)
         df = pd.DataFrame(self.cursor.fetchall(),columns=self.columns)
