@@ -28,14 +28,14 @@ class data_loader_opsvone:
             return "*"
         else:
             return ", ".join(columns)
-    def select_dates(self):
+    def list_dates(self):
         self.connect_server()
         sql_command="select  CAST(updated_at AS DATE) as date,count(invoice_number) as invoice_counts from {} where is_coordinate=1 group by date".format(self.table)
         self.cursor.execute(sql_command)
         df = pd.DataFrame(self.cursor.fetchall(), columns=['dates','invoice_counts'])
         self.close_connection()
         return df
-    def select_slots(self,dates):
+    def list_slots(self,dates):
         self.connect_server()
         sql_command='select  time_slot,count(invoice_number)  from {} where is_coordinate=1 and CAST(updated_at AS DATE)  IN("{}") group by time_slot'.format(self.table,'","'.join(dates))
 

@@ -5,10 +5,13 @@
 # from ortools.constraint_solver import routing_enums_pb2
 # from ortools.constraint_solver import pywrapcp
 import os
-from data_loader import data_loader_opsvone
+from distance_matrix import distance_matrix
+
+
 if __name__ == '__main__':
-    data_loader=data_loader_opsvone()
 
-    print(data_loader.load_data(['2023-02-01', '2023-02-02'],['5:31 PM to 8:30 PM','5:31 PM to 8:30 PM']))
+    calc_distance=distance_matrix()
+    dis_mat=calc_distance.euclidean_matrix_raw()
 
+    print(dis_mat)
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
