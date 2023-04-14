@@ -21,8 +21,8 @@ class plan_route(distance_matrix):
         self.distance_time_parameters=params
     def create_vehicle_parameters(self):
         params={}
-        params['vehicles_number']=7 #number of vehicles
-        params['capacity']=[2500,2500,1200,1200,1200,1200,1200] # Vehicle Capacity
+        params['vehicles_number']=15 #number of vehicles
+        params['capacity']=[2500,2500,1200,1200,1200,1200,1200,2500,2500,1200,2500,2500,2500,2500,2500] # Vehicle Capacity
         self.vehicle_parameters=params
     def create_routing_index_manager(self):
         # considering 0 as the depot we need to amend this
@@ -136,7 +136,9 @@ class plan_route(distance_matrix):
             routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC)
         search_parameters.local_search_metaheuristic = (
             routing_enums_pb2.LocalSearchMetaheuristic.GUIDED_LOCAL_SEARCH)
-        search_parameters.solution_limit = 10
+        # search_parameters.solution_limit = 20
+        search_parameters.time_limit.seconds = 90
+
         # search_parameters.log_search = 1
         self.solution = self.routing.SolveWithParameters(search_parameters)
         # Print solution on console.
@@ -154,34 +156,38 @@ class plan_route(distance_matrix):
         c = 0
         xy = self.convert_to_xy()
         xy = xy - xy[0] # depot is subtracted for balancing things
+        # print(xy)
+        print(sol)
         if sol:
             for vehicle_id in sol.keys():
+                if len(sol[vehicle_id]['route_index'])==2:
+                    continue
                 for i in range(len(sol[vehicle_id]['route_index']) - 1):
 
                     a, b = xy[sol[vehicle_id]['route_index'][i]], xy[sol[vehicle_id]['route_index'][i+1]]
-                    print(a,b)
-            #         self.connectpoints(a[0][0], a[0][1], b[0][0], b[0][1], color[c % len(color)])
-            #     c += 1
-            # plt.scatter(xy[:, 0], xy[:, 1], c="blue", s=10)
-            # plt.show()
+                    # print(vehicle_id,a,b)
+                    self.connectpoints(a[0], a[1], b[0], b[1], color[c % len(color)])
+                c += 1
+            plt.scatter(xy[:, 0], xy[:, 1], c="blue", s=10)
+            plt.show()
 
 if __name__ == '__main__':
     calc_distance=distance_matrix()
     print(list(calc_distance.data['weight']))
-    # k=list(calc_distance.list_dates()['dates'])
-    # l=[str(i) for i in k]
-    # print(l)
+    k=list(calc_distance.list_dates()['dates'])
+    l=[str(i) for i in k]
+    print(l)
     # p=l,['2:31 PM to 5:30 PM','11:31 AM to 1:30 PM','9:30 AM to 11:30 AM','5:31 PM to 8:30 PM']
     # dis_mat=calc_distance.euclidean_matrix_raw()
-
+    #
     start_time = time.time()
-    route_opt=plan_route()
+    route_opt=plan_route(['2023-02-01', '2023-02-02', '2023-02-05'],['2:31 PM to 5:30 PM','11:31 AM to 1:30 PM','9:30 AM to 11:30 AM','5:31 PM to 8:30 PM'])
     print("--- %s seconds ---" % (time.time() - start_time))
     start_time = time.time()
     print(len(route_opt.data))
     print(route_opt.visualise_route())
     print("--- %s seconds ---" % (time.time() - start_time))
     # print(route_opt.list_dates())
-    # print(route_opt.list_slots(['2023-02-06']))
+    print(route_opt.list_slots(['2023-02-06']))
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
