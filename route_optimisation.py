@@ -167,3 +167,31 @@ class plan_route(distance_matrix):
                 c += 1
             plt.scatter(xy[:, 0], xy[:, 1], c="blue", s=10)
             plt.show()
+
+        net_route_time = 0
+        cost_2hrs = 0
+        cost_3hrs = 0
+        costnormalweight = 0
+        cost30weight = 0
+        cost2weight = 0
+        for vehicle_id in range(self.vehicle_parameters['vehicles_number']):
+            net_route_time += sol[vehicle_id]['route_time']
+
+            cost_2hrs += 4000 * max(0, sol[vehicle_id]['route_time'] - int(
+                self.distance_time_parameters['speed'] * 2 * 1000))
+            # print(max(0,sol[vehicle_id]['route_time']-int(self.distance_time_parameters['speed']*2*1000)))
+            cost_3hrs += 100000 * max(0, sol[vehicle_id]['route_time'] - int(
+                self.distance_time_parameters['speed'] * 3.5 * 1000))
+            costnormalweight += 500 * max(0, sol[vehicle_id]['weight'] - int(
+                self.vehicle_parameters['capacity'][vehicle_id]))
+            cost30weight += 5000 * max(0, sol[vehicle_id]['weight'] - int(
+                self.vehicle_parameters['capacity'][vehicle_id] * 1.3))
+            cost2weight += 500000 * max(0, sol[vehicle_id]['weight'] - int(
+                self.vehicle_parameters['capacity'][vehicle_id] * 2))
+        print('net_route_time: {}'.format(net_route_time))
+        print('cost_2hrs: {}'.format(cost_2hrs))
+        print('cost_3hrs: {}'.format(cost_3hrs))
+        print('costnormalweight: {}'.format(costnormalweight))
+        print('cost30weight: {}'.format(cost30weight))
+        print('cost2weight: {}'.format(cost2weight))
+        print('Net_Cost: {}'.format(net_route_time + cost_3hrs + cost_2hrs + costnormalweight + cost2weight + cost30weight))
