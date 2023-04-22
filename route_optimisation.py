@@ -122,20 +122,21 @@ class plan_route(distance_matrix):
         time_dimension.SetGlobalSpanCostCoefficient(1)
         for vehicle_id in range(self.vehicle_parameters['vehicles_number']):
             index = self.routing.End(vehicle_id)
-            time_dimension.SetCumulVarSoftUpperBound(index,int(self.distance_time_parameters['speed']*2*1000), 10)
-            time_dimension.SetCumulVarSoftUpperBound(index, int(self.distance_time_parameters['speed'] * 3.5 * 1000), 10000)
-            weight_dimension.SetCumulVarSoftUpperBound(index, int(self.vehicle_parameters['capacity'][vehicle_id]*1.3), 500)
-            weight_dimension.SetCumulVarSoftUpperBound(index,int(self.vehicle_parameters['capacity'][vehicle_id] * 2), 50000)
+            time_dimension.SetCumulVarSoftUpperBound(index,int(self.distance_time_parameters['speed']*2*1000), 1000)
+            time_dimension.SetCumulVarSoftUpperBound(index, int(self.distance_time_parameters['speed'] * 3.5 * 1000), 100000)
+            weight_dimension.SetCumulVarSoftUpperBound(index,int(self.vehicle_parameters['capacity'][vehicle_id] ), 500)
+            weight_dimension.SetCumulVarSoftUpperBound(index, int(self.vehicle_parameters['capacity'][vehicle_id]*1.3), 5000)
+            weight_dimension.SetCumulVarSoftUpperBound(index,int(self.vehicle_parameters['capacity'][vehicle_id] * 2), 500000)
         # Setting first solution heuristic.
         search_parameters = pywrapcp.DefaultRoutingSearchParameters()
         search_parameters.first_solution_strategy = (
             routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC)
         search_parameters.local_search_metaheuristic = (
             routing_enums_pb2.LocalSearchMetaheuristic.GUIDED_LOCAL_SEARCH)
-        # search_parameters.solution_limit = 20
-        search_parameters.time_limit.seconds = 90
+        search_parameters.solution_limit = 1
+        # search_parameters.time_limit.seconds = 90
 
-        # search_parameters.log_search = 1
+        search_parameters.log_search = 1
         self.solution = self.routing.SolveWithParameters(search_parameters)
         # Print solution on console.
         if self.solution:

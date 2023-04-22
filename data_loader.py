@@ -6,7 +6,7 @@ import pandas as pd
 class data_loader_opsvone:
     def __init__(self):
         self.host="ops-solution.c44vbudlur4p.ap-south-1.rds.amazonaws.com"
-        self.host="ops-solution.c44vbudlur4p.ap-south-1.rds.amazonaws.com"
+
         self.user="masteradmin"
         self.password="unorgopsdb123"
         self.database="opsvone"

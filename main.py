@@ -5,6 +5,7 @@ import numpy as np
 import time
 from distance_matrix import distance_matrix
 from route_optimisation import plan_route
+
 if __name__ == '__main__':
     calc_distance=distance_matrix()
     print(list(calc_distance.data['weight']))
@@ -22,6 +23,6 @@ if __name__ == '__main__':
     print(route_opt.visualise_route())
     print("--- %s seconds ---" % (time.time() - start_time))
     # print(route_opt.list_dates())
-    print(route_opt.list_slots(['2023-02-06']))
+    # print(route_opt.list_slots(['2023-02-06']))
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
